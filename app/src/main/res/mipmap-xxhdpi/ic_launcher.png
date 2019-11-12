@@ -1,0 +1,170 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_weight="1"
+    android:background="#FFFFFFFF"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="31dp"
+        android:background="#FFFFFFFF"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <ImageView
+            android:id="@+id/btn_system_health"
+            android:layout_width="@dimen/help_width"
+            android:layout_height="@dimen/help_height"
+            android:layout_gravity="left"
+            app:srcCompat="@drawable/ic_icon_tick" />
+
+        <ImageView
+            android:id="@+id/logout"
+            android:layout_width="@dimen/help_width"
+            android:layout_height="@dimen/help_height"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:src="@drawable/icon_question" />
+
+        <TextView
+            android:id="@+id/txt_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_toEndOf="@+id/btn_system_health"
+            android:layout_toRightOf="@+id/btn_system_health"
+            android:text="System Ok"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/imgLogo"
+        app:srcCompat="@drawable/ic_absa_full_logo_red" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <Button
+            android:id="@+id/btnIndividualOpportunity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:drawableTop="@drawable/my_individual_opp_image"
+            android:text="Refer opportunity"
+            android:textColor="@color/absa_silver"
+            android:textSize="@dimen/small_text_size"
+            android:typeface="sans" />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_new_sale"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/capture_lead_image"
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:text="Capture Lead"
+            android:textColor="@color/absa_silver"
+            android:textSize="@dimen/small_text_size"
+            />
+
+        <Button
+
+            android:id="@+id/btn_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:drawableTop="@drawable/loan_calculator_image"
+            android:text="Loan Calculator"
+            android:textColor="@color/absa_silver"
+            android:textSize="@dimen/small_text_size"
+            android:typeface="sans" />
+        <Button
+            android:id="@+id/btn_update_sale"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/my_lead_image"
+
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:text="My Leads"
+            android:textColor="@color/absa_silver"
+            android:textSize="@dimen/small_text_size"
+            android:typeface="sans" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      
+
+        <Button
+            android:id="@+id/btn_diary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:drawableTop="@drawable/my_diary_image"
+            android:text="My Diary"
+            android:textColor="@color/absa_silver"
+            android:textSize="@dimen/small_text_size"
+            android:typeface="sans" />
+
+        <Button
+            android:id="@+id/btn_target"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:drawableTop="@drawable/my_target_image"
+            android:layout_weight="1"
+            android:background="@drawable/btn_login_bg_empty_grey"
+            android:minHeight="110dp"
+            android:padding="14dp"
+            android:text="My Targets"
+            android:textColor="@color/absa_silver"
+      

@@ -1,0 +1,68 @@
+package com.bbk.fragments;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.bbk.R;
+import com.bbk.calculator.CalculateDsr;
+import com.bbk.db.CreditLifeDb;
+import com.bbk.db.DSRDb;
+import com.bbk.db.ProductDb;
+import com.bbk.i_model.DSRDataModel;
+import com.bbk.i_model.DSRDistinctModel;
+import com.bbk.i_model.ProductsItem;
+import com.bbk.utilities.I_fragmentlistener;
+import com.bbk.views.I_SpinnerValue;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.List;
+
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
+
+/**
+ * Created by George on 15-Feb-16.
+ */
+public class LastCalculateFragment extends Fragment {
+    DSRDataModel dsrDataModel;
+    I_fragmentlistener<DSRDataModel> complete_listener;
+    TextView txt_company_name, txt_product_name, txt_negotiation_fees,
+
+    txt_moratorium, txt_flag,
+
+    txt_adjusted_gross_salary,
+
+    txt_loan_dsr,
+
+    txt_adjusted_net, txt_evaluated_income, txt_term, txt_maximum_monthly_repayments, txt_factor, txt_loan_amount_attainable,
+            txt_projected_dsr, txt_current_dsr, txt_actual_dsr, txt_negotiation_fees_value, txt_excise_duty, txt_insurance, txt_monthly_fees, txt_total_interest, txt_cost_of_credit,
+            txt_credit_card_limit, txt_overdraft_limit, lbl_credit_card_limit, lbl_overdraft_limit;
+    CalculateDsr calculateDsr;
+    DSRDistinctModel dsrDistinctModel;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.dsr_summary, container, false);
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setCurrencySymbol("Ksh.");
+        dfs.setGroupingSeparator(',');
+        dfs.setMonetaryDecimalSeparator('.');
+        ((DecimalFormat) format).setDecimalFormatSymbols(dfs);
+
+        dsrDistinctModel = new DSRDistinctModel();
+        final DSRDb dsrDb = DSRDb.getInstance(getActivity());
+        dsrDb.getReadableDatabase();
+        dsrDataModel = dsrDb.getDsrDataModel();
+        calculateDsr = new CalculateDsr(getActivity(), dsrDataModel);
+        TextView txt_label_loan = (TextView) rootView.findViewById(R.id.textView8);
+        TextView txt_label_repayment = (TextView) rootView.findViewById(R.id.textView10);
+        txt_label_loan.setTex

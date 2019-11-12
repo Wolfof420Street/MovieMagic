@@ -1,0 +1,144 @@
+package com.bbk.fragments;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.bbk.R;
+import com.bbk.calculator.CalculateDsr;
+import com.bbk.db.CreditLifeDb;
+import com.bbk.db.DSRDb;
+import com.bbk.i_model.DSRDataModel;
+import com.bbk.i_model.LendingFrameWork;
+import com.bbk.i_model.ProductsItem;
+import com.bbk.math.RoundOff;
+import com.bbk.utilities.I_fragmentlistener;
+import com.bbk.views.I_SpinnerValue;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.List;
+
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
+
+/**
+ * Created by George on 15-Feb-16.
+ */
+public class FirstCalculateFragment extends Fragment {
+    DSRDataModel dsrDataModel;
+    I_fragmentlistener<DSRDataModel> complete_listener;
+    TextView txt_company_name, txt_product_name, txt_negotiation_fees,
+
+    txt_moratorium, txt_flag,
+
+    txt_adjusted_gross_salary,
+
+    txt_loan_dsr,
+            txt_rate_interest,
+
+    txt_error, txt_adjusted_net, txt_evaluated_income, txt_term, txt_maximum_monthly_repayments,
+            txt_factor, txt_loan_amount_attainable, txt_actual_dsr,
+            txt_negotiation_fees_value, txt_excise_duty, txt_insurance,
+            txt_monthly_fees, txt_total_interest, txt_cost_of_credit,
+            txt_credit_card_limit, txt_overdraft_limit, lbl_credit_card_limit, lbl_overdraft_limit;
+
+    CalculateDsr calculateDsr;
+    ScrollView scroll;
+    Boolean is_qualified = true;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.firstcalculatefragment, container, false);
+
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setCurrencySymbol("Ksh.");
+        dfs.setGroupingSeparator(',');
+        dfs.setMonetaryDecimalSeparator('.');
+
+        ((DecimalFormat) format).setDecimalFormatSymbols(dfs);
+        final DSRDb dsrDb = DSRDb.getInstance(getActivity());
+        dsrDb.getReadableDatabase();
+        dsrDataModel = dsrDb.getDsrDataModel();
+        calculateDsr = new CalculateDsr(getActivity(), dsrDataModel);
+
+        scroll = (ScrollView) rootView.findViewById(R.id.scroll);
+        txt_error = (TextView) rootView.findViewById(R.id.txt_warning_text);
+        txt_company_name = (TextView) rootView.findViewById(R.id.txt_company_name);
+        txt_product_name = (TextView) rootView.findViewById(R.id.txt_product_name);
+
+        if (dsrDataModel.is_bundled()) {
+            List<ProductsItem> productsItemList = dsrDataModel.getBundled_products();
+            String name = "";
+            for (ProductsItem productsItem : productsItemList) {
+                name += productsItem.getName() + ",";
+            }
+
+            name = name.substring(0, name.length() - 1);
+            txt_product_name.setText(name);
+        } else {
+            txt_product_name.setText(dsrDataModel.getProduct_name());
+        }
+
+        txt_negotiation_fees = (TextView) rootView.findViewById(R.id.txt_negotiation_fees);
+        txt_moratorium = (TextView) rootView.findViewById(R.id.txtEmail);
+        txt_flag = (TextView) rootView.findViewById(R.id.txt_flag);
+        txt_adjusted_gross_salary = (TextView) rootView.findViewById(R.id.txt_adjusted_gross_salary);
+        txt_loan_dsr = (TextView) rootView.findViewById(R.id.txt_loan_dsr);
+        txt_adjusted_net = (TextView) rootView.findViewById(R.id.txt_adjusted_net);
+        txt_evaluated_income = (TextView) rootView.findViewById(R.id.txt_evaluated_income);
+        txt_term = (TextView) rootView.findViewById(R.id.txt_loan_term);
+        txt_maximum_monthly_repayments = (TextView) rootView.findViewById(R.id.txt_maximum_monthly_repayments);
+        txt_factor = (TextView) rootView.findViewById(R.id.txt_factor);
+        txt_loan_amount_attainable = (TextView) rootView.findViewById(R.id.txt_loan_amount);
+        txt_actual_dsr = (TextView) rootView.findViewById(R.id.txt_actual_dsr);
+        txt_negotiation_fees_value = (TextView) rootView.findViewById(R.id.txt_negotiation_fees);
+        txt_excise_duty = (TextView) rootView.findViewById(R.id.txt_excise_duty);
+        txt_insurance = (TextView) rootView.findViewById(R.id.txt_insurance);
+        txt_monthly_fees = (TextView) rootView.findViewById(R.id.txt_monthly_fees);
+        txt_total_interest = (TextView) rootView.findViewById(R.id.txt_total_interest);
+        txt_cost_of_credit = (TextView) rootView.findViewById(R.id.txt_cost_of_credit);
+        txt_rate_interest = (TextView) rootView.findViewById(R.id.txt_rateInterest);
+        txt_credit_card_limit = (TextView) rootView.findViewById(R.id.txt_credit_card_limit);
+        txt_overdraft_limit = (TextView) rootView.findViewById(R.id.txt_overdraft_limit);
+        lbl_credit_card_limit = (TextView) rootView.findViewById(R.id.textView28);
+        lbl_overdraft_limit = (TextView) rootView.findViewById(R.id.textView27);
+        if (dsrDataModel.getIs_dsr_category2().equals("1")) {
+            txt_credit_card_limit.setVisibility(View.VISIBLE);
+            txt_credit_card_limit.setText(format.format(calculateDsr.cdlimit()));
+            txt_overdraft_limit.setText(format.format(calculateDsr.odlimit()));
+            txt_overdraft_limit.setVisibility(View.VISIBLE);
+            lbl_credit_card_limit.setVisibility(View.VISIBLE);
+            lbl_overdraft_limit.setVisibility(View.VISIBLE);
+        } else {
+            txt_credit_card_limit.setVisibility(View.GONE);
+            txt_overdraft_limit.setVisibility(View.GONE);
+            lbl_credit_card_limit.setVisibility(View.GONE);
+            lbl_overdraft_limit.setVisibility(View.GONE);
+        }
+
+
+        txt_company_name.setText(dsrDataModel.getCompany_name());
+
+
+        LendingFrameWork lendingFrameWork = calculateDsr.get_lending_framework(calculateDsr.lf_income());
+        dsrDataModel.setLoan_period(lendingFrameWork.getMax_loan_period());
+        double maximum_loan_attainable = calculateDsr.maximum_loan_amount_attainable(Integer.parseInt(dsrDataModel.getLoan_period()));
+
+
+        txt_moratorium.setText(calculateDsr.moratorium() + " Months");
+        txt_rate_interest.setText(calculateDsr.interest() + " %");
+
+
+        CreditLifeDb creditLifeDb = CreditLifeDb.getInstance(getActivity());
+        creditLifeDb.getReadableDatabase();
+        String insurer_name = credit

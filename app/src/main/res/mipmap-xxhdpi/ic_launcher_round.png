@@ -1,0 +1,270 @@
+package com.bbk.net;
+
+/**
+ * Author :George Opiyo
+ * Email  :jqwa.george@gmail.com
+ **/
+
+import java.util.ArrayList;
+
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.bbk.auth.UserDetails;
+import com.bbk.constants.Constant;
+import com.bbk.i_model.NetWorkResponse;
+import com.bbk.i_model.SaleModel;
+import com.bbk.i_model.SaleUpdateModel;
+import com.bbk.model.LoginModel;
+import com.bbk.utilities.NameValuePair;
+
+public class UserFunctions {
+
+    private JSONParserV2 jsonParser;
+
+    Context context;
+    UserDetails usd;
+
+    // constructor
+    public UserFunctions(Context context) {
+        jsonParser = new JSONParserV2();
+        this.context = context;
+        UserDetails usd = new UserDetails();
+        this.usd = usd;
+
+    }
+
+
+    public ResponseModel login(String user_name, String password) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair(LoginModel.KEY_USERNAME, user_name));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_ID, Constant.CLIENT_ID));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_SECRET, Constant.CLIENT_SECRET));
+        params.add(new NameValuePair(LoginModel.KEY_GRANT_TYPE, Constant.GRANT_TYPE));
+        params.add(new NameValuePair(LoginModel.KEY_PASSWORD, password));
+        String url=Constant.KEY_DOMAIN + "oauth2/token";
+        Log.e("Url",url);
+        Log.e("Body",params.toString());
+        ResponseModel rep = jsonParser.requestPOST(url, params);
+        return rep;
+
+    }
+
+    public ResponseModel refresh_token() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_ID, Constant.CLIENT_ID));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_SECRET, Constant.CLIENT_SECRET));
+        params.add(new NameValuePair(LoginModel.KEY_GRANT_TYPE, Constant.GRANT_TYPE));
+        params.add(new NameValuePair(LoginModel.KEY_REFRESH_TOKEN, usd.getRefreshToken(context)));
+        ResponseModel rep = jsonParser.requestPOST(Constant.KEY_DOMAIN + "oauth2/token", params);
+        return rep;
+
+    }
+
+
+    public ResponseModel passwordreset(String password, String confirm_password, String code) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("password", password));
+        params.add(new NameValuePair("confirm", confirm_password));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_ID, Constant.CLIENT_ID));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_SECRET, Constant.CLIENT_SECRET));
+        params.add(new NameValuePair(LoginModel.KEY_GRANT_TYPE, Constant.GRANT_TYPE));
+        ResponseModel rep = jsonParser.requestPOST(Constant.KEY_RESOURCES + "password/new-password?token=" + code, params);
+        return rep;
+
+    }
+
+
+    public ResponseModel resetpassword(String email) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("email", email));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_ID, Constant.CLIENT_ID));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_SECRET, Constant.CLIENT_SECRET));
+        params.add(new NameValuePair(LoginModel.KEY_GRANT_TYPE, Constant.GRANT_TYPE));
+        ResponseModel rep = jsonParser.requestPOST(Constant.KEY_RESOURCES + "password/reset", params);
+        return rep;
+
+    }
+
+
+    public ResponseModel send_leads(String email) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("email", email));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_ID, Constant.CLIENT_ID));
+        params.add(new NameValuePair(LoginModel.KEY_CLIENT_SECRET, Constant.CLIENT_SECRET));
+        params.add(new NameValuePair(LoginModel.KEY_GRANT_TYPE, Constant.GRANT_TYPE));
+        ResponseModel rep = jsonParser.requestPOST(Constant.KEY_DOMAIN + "user/reset-password", params);
+        return rep;
+
+    }
+
+    public ResponseModel sendlead(String text) {
+        ResponseModel rep = jsonParser.requestPOSTJSON(Constant.KEY_RESOURCES + "sales-leads" + "?access_token=" + usd.getToken(context), text);
+        return rep;
+
+    }
+
+    public ResponseModel sendupdate(String text, String item_id) {
+        ResponseModel rep = jsonParser.requestPATCHJSON(Constant.KEY_RESOURCES + "sales-leads/" + item_id + "?access_token=" + usd.getToken(context), text);
+        return rep;
+
+    }
+
+    public ResponseModel sendIndividualOpportunity(String text) {
+
+        String url =Constant.KEY_RESOURCES + "opportunity/create" +  "?access_token=" + usd.getToken(context);
+        Log.e("Url",url);
+        ResponseModel rep = jsonParser.requestPOSTJSON(url, text);
+        return rep;
+
+    }
+
+
+
+    public ResponseModel products() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "products", params);
+        return rep;
+
+    }
+
+    public ResponseModel getActivationCode(String brid) {
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("username", brid));
+        ResponseModel rep = jsonParser.requestGETObject(Constant.KEY_RESOURCES + "password/activation-code", params);
+        return rep;
+
+    }
+
+    public ResponseModel allowances(String company) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        params.add(new NameValuePair("company_id", company));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "company-allowances", params);
+        return rep;
+
+    }
+
+    public ResponseModel credit_life() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "credit-life-providers", params);
+        return rep;
+
+    }
+
+    public ResponseModel companies() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "companies", params);
+        return rep;
+
+    }
+
+    public ResponseModel saleprobaility() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "sales-probabilities", params);
+        return rep;
+
+    }
+
+    public ResponseModel categories() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "product-categories", params);
+        return rep;
+
+    }
+
+    public ResponseModel lendingframeword() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "lending-frameworks", params);
+        return rep;
+
+    }
+
+    public ResponseModel company_rates(Boolean with_name) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        if (with_name)
+            params.add(new NameValuePair("expand", "company"));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "company-rates", params);
+        return rep;
+
+    }
+
+    public ResponseModel company_rate(String company_id) {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        params.add(new NameValuePair("name", company_id));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "companies", params);
+        return rep;
+
+    }
+
+    public ResponseModel current_leads() {
+        //HashMap<String ,String> params = new HashMap<>();
+        ArrayList<NameValuePair> params = new ArrayList<>();
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGET(Constant.KEY_RESOURCES + "sales-leads", params);
+        return rep;
+
+    }
+
+    public ResponseModel revolving_factor() {
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new NameValuePair("access_token", usd.getToken(context)));
+        ResponseModel rep = jsonParser.requestGETObject(Constant.KEY_RESOURCES + "dsr-settings", params);
+        return rep;
+
+    }
+
+	public ResponseModel targetsFilter(ArrayList<NameValuePair> params) {
+
+		params.add(new NameValuePair("access_token", usd.getToken(context)));
+		ResponseModel rep = jsonParser.requestGET(Constant.KEY
